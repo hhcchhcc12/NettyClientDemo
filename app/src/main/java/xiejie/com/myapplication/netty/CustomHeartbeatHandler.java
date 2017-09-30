@@ -110,8 +110,6 @@ public abstract class CustomHeartbeatHandler extends SimpleChannelInboundHandler
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         //System.err.println("---" + ctx.channel().remoteAddress() + " is inactive---");
         Log.e("client","---" + ctx.channel().remoteAddress() + " is inactive---");
-
-        NettyClientBootstrap.getInstance().repeateTcp();
     }
 
     protected void handleReaderIdle(ChannelHandlerContext ctx) {

@@ -9,10 +9,7 @@ import android.widget.Toast;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import xiejie.com.myapplication.domain.TCPData;
 import xiejie.com.myapplication.netty.Client;
-import xiejie.com.myapplication.netty.NettyClientBootstrap;
-import xiejie.com.myapplication.util.NettyApplaction;
 import xiejie.com.myapplication.util.ToastEvent;
 
 
@@ -26,8 +23,6 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         EventBus.getDefault().register(this);
 
-        final NettyClientBootstrap nettyClientBootstrap =
-                new NettyClientBootstrap();
 
         Button btn = (Button) findViewById(R.id.btn);
         btn.setOnClickListener(new View.OnClickListener() {

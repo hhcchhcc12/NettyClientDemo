@@ -30,13 +30,17 @@ public class Client {
     private Channel channel;
     private Bootstrap bootstrap;
 
-    private boolean isLogOut;
+    private static boolean isLogOut;
 
     private static final int MAX_FRAME_LENGTH = 1024 * 1024;
     private static final int LENGTH_FIELD_LENGTH = 4;
     private static final int LENGTH_FIELD_OFFSET = 2;
     private static final int LENGTH_ADJUSTMENT = 0;
     private static final int INITIAL_BYTES_TO_STRIP = 0;
+
+    public static boolean isLogOut(){
+        return isLogOut;
+    }
 
     public void sendData() throws Exception {
         if (channel != null && channel.isActive()) {
@@ -72,7 +76,7 @@ public class Client {
                             p.addLast(new CustomEncoder());
                             p.addLast(new CustomDecoder(MAX_FRAME_LENGTH,LENGTH_FIELD_LENGTH,
                                     LENGTH_FIELD_OFFSET,LENGTH_ADJUSTMENT,INITIAL_BYTES_TO_STRIP,false));
-                            p.addLast(new ClientHandler(Client.this));
+                            p.addLast(new ClientHandler(Client.this,callBack));
                         }
                     });
             doConnect();
@@ -82,12 +86,26 @@ public class Client {
         }
     }
 
+    ClientHandler.ChannelInactiveCallBack callBack = new ClientHandler.ChannelInactiveCallBack() {
+        @Override
+        public void callBack(ChannelHandlerContext ctx) {
+            Log.e("client","isLogOut : " + isLogOut);
+
+            if(isLogOut){
+                ctx.close();
+            }else {
+                doConnect();
+            }
+        }
+    };
+
     protected void doConnect() {
-        if (channel != null && channel.isActive() || isLogOut) {
+        if (channel != null && channel.isActive()) {
             return;
         }
 
         ChannelFuture future = bootstrap.connect(TCP_URL, TCP_PORT);
+        isLogOut = false;
 
         future.addListener(new ChannelFutureListener() {
             public void operationComplete(ChannelFuture futureListener) throws Exception {

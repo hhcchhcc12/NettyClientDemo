@@ -2,6 +2,8 @@ package xiejie.com.myapplication.netty;
 
 import android.util.Log;
 
+import java.util.concurrent.TimeUnit;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 
@@ -12,9 +14,11 @@ import io.netty.channel.ChannelHandlerContext;
 
 public class ClientHandler extends CustomHeartbeatHandler {
     private Client client;
-    public ClientHandler(Client client) {
+    private ChannelInactiveCallBack callBack;
+    public ClientHandler(Client client,ChannelInactiveCallBack callBack) {
         super("client");
         this.client = client;
+        this.callBack = callBack;
     }
 
     @Override
@@ -41,6 +45,13 @@ public class ClientHandler extends CustomHeartbeatHandler {
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         super.channelInactive(ctx);
-        client.doConnect();
+        if(callBack != null){
+            callBack.callBack(ctx);
+        }
     }
+
+    public interface ChannelInactiveCallBack{
+        void callBack(ChannelHandlerContext ctx);
+    }
+
 }
