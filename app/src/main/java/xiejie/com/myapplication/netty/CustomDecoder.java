@@ -14,8 +14,8 @@ import xiejie.com.myapplication.domain.TCPData;
 
 public class CustomDecoder extends LengthFieldBasedFrameDecoder {
 
-    //判断传送客户端传送过来的数据是否按照协议传输，头部信息的大小应该是 byte+byte+int = 1+1+4 = 6
-    private static final int HEADER_SIZE = 6;
+    //判断传送客户端传送过来的数据是否按照协议传输，头部信息的大小应该是 byte+int = 1+4 = 6
+    private static final int HEADER_SIZE = 5;
 
     private byte type;
 
@@ -53,7 +53,6 @@ public class CustomDecoder extends LengthFieldBasedFrameDecoder {
 
         //注意在读的过程中，readIndex的指针也在移动
         type = in.readByte();
-
         //flag = in.readByte();
 
         length = in.readInt();
